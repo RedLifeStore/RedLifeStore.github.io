@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Website</title>
+  </head>
+  <body>
+    <script>
+      // Load the client app by default
+      window.location.href = "./client/public/index.html";
+    </script>
+
+    <!-- Fallback links if JS is disabled -->
+    <noscript>
+      <ul>
+        <li><a href="./client/public/index.html">Client</a></li>
+        <li><a href="./server/index.js">Server</a></li>
+        <li><a href="./fivem/delivery.lua">FiveM</a></li>
+        <li><a href="./sql/setup.sql">SQL</a></li>
+      </ul>
+    </noscript>
+  </body>
+</html>
