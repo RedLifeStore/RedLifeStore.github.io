@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RedLife Romania — Magazin VIP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#C9922A;--gold-l:#F0B84A;--gold-d:#8a5f10;
+  --red:#C0271F;--red-b:#FF3B30;
+  --bg:#060608;--bg0:#060608;--bg1:#0D0D10;--bg2:#131318;--bg3:#18181F;--bg4:#1E1E28;
+  --t1:#F0EDE6;--t2:#7A7570;--t3:#3A3830;
+  --bd:rgba(201,146,42,0.12);--bdh:rgba(201,146,42,0.35);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg0);color:var(--t1);font-family:'Outfit',sans-serif;font-size:15px;overflow-x:hidden;}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.02) 3px,rgba(0,0,0,0.02) 4px);}
+
+/* ===== LOGIN PAGE ===== */
+#login-page{
+  position:fixed;inset:0;z-index:5000;
+  width:100%;height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:0;padding:2rem;
+  background:var(--bg);
+  transition:opacity 0.7s ease, transform 0.7s ease;
+}
+#login-page.hide{opacity:0;transform:scale(1.04);pointer-events:none;}
+
+#canvas{position:absolute;inset:0;z-index:0;}
+.cin-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(6,6,8,0.4) 0%,rgba(6,6,8,0.1) 40%,rgba(6,6,8,0.1) 60%,rgba(6,6,8,0.7) 100%);}
+.scanlines-login{position:absolute;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);}
+.float-tags{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden;}
+.ftag{position:absolute;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 12px;border-radius:20px;border:1px solid rgba(201,146,42,0.25);color:rgba(201,146,42,0.4);background:rgba(201,146,42,0.04);animation:floatTag linear infinite;white-space:nowrap;}
+@keyframes floatTag{0%{transform:translateY(100vh) translateX(0) rotate(-5deg);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-120px) translateX(30px) rotate(5deg);opacity:0;}}
+
+.corner{position:absolute;width:80px;height:80px;pointer-events:none;opacity:0.3;z-index:4;}
+.corner-tl{top:20px;left:20px;border-top:2px solid var(--gold);border-left:2px solid var(--gold);border-radius:4px 0 0 0;}
+.corner-tr{top:20px;right:20px;border-top:2px solid var(--gold);border-right:2px solid var(--gold);border-radius:0 4px 0 0;}
+.corner-bl{bottom:20px;left:20px;border-bottom:2px solid var(--gold);border-left:2px solid var(--gold);border-radius:0 0 0 4px;}
+.corner-br{bottom:20px;right:20px;border-bottom:2px solid var(--gold);border-right:2px solid var(--gold);border-radius:0 0 4px 0;}
+
+.login-wrap{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:0;}
+
+.srv-status{position:absolute;top:0;left:50%;transform:translate(-50%,-200%);display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(201,146,42,0.2);border-radius:100px;padding:8px 20px;font-size:12px;font-weight:600;letter-spacing:1px;color:rgba(240,184,74,0.8);backdrop-filter:blur(10px);animation:fadeDown 1s ease 0.3s both;white-space:nowrap;}
+.srv-dot{width:7px;height:7px;border-radius:50%;background:#2ECC71;box-shadow:0 0 8px #2ECC71;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes fadeDown{from{opacity:0;transform:translate(-50%,-100%);}to{opacity:1;transform:translate(-50%,-200%);}}
+
+.logo-area{text-align:center;margin-bottom:2.5rem;animation:heroIn 1.2s cubic-bezier(0.16,1,0.3,1) 0.5s both;}
+@keyframes heroIn{from{opacity:0;transform:scale(0.85) translateY(30px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.logo-emblem{width:90px;height:90px;margin:0 auto 1.5rem;position:relative;}
+.logo-ring{position:absolute;inset:0;border-radius:50%;border:2px solid var(--gold);animation:spin 8s linear infinite;}
+.logo-ring-2{position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(201,146,42,0.3);animation:spin 12s linear infinite reverse;}
+.logo-core{position:absolute;inset:16px;border-radius:50%;background:linear-gradient(135deg,var(--red),#8B0000);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:2px;box-shadow:0 0 30px rgba(192,39,31,0.5);}
+@keyframes spin{to{transform:rotate(360deg);}}
+.logo-text{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5.5rem);letter-spacing:8px;line-height:1;background:linear-gradient(180deg,#fff 0%,var(--gold-l) 50%,var(--gold) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;filter:drop-shadow(0 0 30px rgba(201,146,42,0.4));}
+.logo-sub{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:6px;color:rgba(201,146,42,0.6);margin-top:4px;}
+
+.login-card{width:100%;max-width:400px;background:rgba(255,255,255,0.03);border:1px solid rgba(201,146,42,0.2);border-radius:24px;padding:2.5rem 2rem;backdrop-filter:blur(20px);position:relative;overflow:hidden;animation:cardInLogin 1s cubic-bezier(0.16,1,0.3,1) 0.8s both;box-shadow:0 40px 80px rgba(0,0,0,0.6),inset 0 1px 0 rgba(255,255,255,0.06);}
+@keyframes cardInLogin{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:translateY(0);}}
+.card-glow{position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:radial-gradient(ellipse,rgba(201,146,42,0.3),transparent 70%);pointer-events:none;}
+.card-line{position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.card-title{text-align:center;font-size:1.1rem;font-weight:600;color:rgba(255,255,255,0.9);margin-bottom:0.4rem;letter-spacing:0.5px;}
+.card-desc{text-align:center;font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:2rem;}
+.login-btns{display:flex;flex-direction:column;gap:12px;}
+.lbtn{display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:14px;font-size:14px;font-weight:600;letter-spacing:0.3px;text-decoration:none;cursor:pointer;position:relative;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;border:none;}
+.lbtn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.08) 50%,transparent 100%);transform:translateX(-100%);transition:transform 0.5s;}
+.lbtn:hover::before{transform:translateX(100%);}
+.lbtn:hover{transform:translateY(-2px);}
+.lbtn:active{transform:scale(0.97);}
+.lbtn-discord{background:#5865F2;color:#fff;box-shadow:0 4px 20px rgba(88,101,242,0.3);}
+.lbtn-discord:hover{box-shadow:0 8px 30px rgba(88,101,242,0.5);}
+.lbtn-steam{background:#1b2838;color:#c6d4df;border:1px solid rgba(103,193,245,0.2);}
+.lbtn-steam:hover{box-shadow:0 8px 30px rgba(27,40,56,0.6);border-color:rgba(103,193,245,0.4);}
+.lbtn-cfx{background:rgba(201,146,42,0.08);color:var(--gold-l);border:1px solid rgba(201,146,42,0.25);}
+.lbtn-cfx:hover{background:rgba(201,146,42,0.15);border-color:rgba(201,146,42,0.5);box-shadow:0 8px 30px rgba(201,146,42,0.15);}
+.lbtn-icon{width:22px;height:22px;flex-shrink:0;}
+.lbtn-arrow{margin-left:auto;opacity:0.5;font-size:16px;transition:transform 0.2s,opacity 0.2s;}
+.lbtn:hover .lbtn-arrow{transform:translateX(4px);opacity:1;}
+.divider{display:flex;align-items:center;gap:12px;margin:4px 0;font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:1px;}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
+.login-note{text-align:center;font-size:11px;color:rgba(255,255,255,0.2);margin-top:1.5rem;line-height:1.6;}
+.login-note a{color:rgba(201,146,42,0.5);text-decoration:none;}
+
+.bottom-feats{display:flex;gap:2rem;margin-top:2rem;animation:fadeUp 1s ease 1.2s both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+.bfeat{text-align:center;}
+.bfeat-val{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;color:var(--gold-l);letter-spacing:1px;}
+.bfeat-label{font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;text-transform:uppercase;margin-top:2px;}
+
+/* ===== MAIN STORE PAGE ===== */
+#store-page{opacity:0;pointer-events:none;transition:opacity 0.7s ease;}
+#store-page.show{opacity:1;pointer-events:all;}
+
+/* SCANLINES */
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.02) 3px,rgba(0,0,0,0.02) 4px);}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:800;background:rgba(6,6,8,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:0 2rem;height:60px;display:flex;align-items:center;gap:2rem;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0;}
+.nav-logo-badge{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--red),#8B0000);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:16px;color:#fff;box-shadow:0 0 15px rgba(192,39,31,0.4);}
+.nav-logo-text{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--t1);}
+.nav-logo-text em{color:var(--gold);font-style:normal;}
+.nav-links{display:flex;gap:0.1rem;margin-left:1rem;}
+.nav-link{padding:6px 14px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:500;color:var(--t2);transition:color 0.2s,background 0.2s;letter-spacing:0.3px;}
+.nav-link:hover,.nav-link.active{color:var(--t1);background:rgba(255,255,255,0.05);}
+.nav-link.active{color:var(--gold);}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.srv-pill{display:flex;align-items:center;gap:6px;background:rgba(46,204,113,0.08);border:1px solid rgba(46,204,113,0.2);border-radius:100px;padding:5px 12px;font-size:12px;font-weight:600;color:rgba(46,204,113,0.9);}
+.srv-dot-sm{width:6px;height:6px;border-radius:50%;background:#2ECC71;box-shadow:0 0 6px #2ECC71;animation:blink 2s infinite;}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.04);border:1px solid var(--bd);border-radius:100px;padding:5px 14px 5px 6px;font-size:13px;font-weight:500;color:var(--t1);cursor:pointer;transition:border-color 0.2s;}
+.user-pill:hover{border-color:var(--bdh);}
+.user-av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.user-vip{font-size:10px;font-weight:700;letter-spacing:1px;color:var(--gold);padding:2px 7px;border-radius:4px;background:rgba(201,146,42,0.1);border:1px solid rgba(201,146,42,0.2);}
+
+/* ANNOUNCE */
+.announce{background:linear-gradient(90deg,var(--red) 0%,#8B0000 50%,var(--red) 100%);background-size:200% 100%;animation:barSlide 4s linear infinite;padding:9px 2rem;text-align:center;font-size:12px;font-weight:700;letter-spacing:1px;color:#fff;}
+@keyframes barSlide{0%{background-position:0%}100%{background-position:200%}}
+.announce em{color:var(--gold-l);font-style:normal;}
+
+
+/* HERO */
+.hero{position:relative;padding:5rem 2rem 4rem;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 100%,rgba(192,39,31,0.15),transparent 70%),radial-gradient(ellipse 40% 40% at 10% 0%,rgba(201,146,42,0.07),transparent 60%),var(--bg0);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(201,146,42,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(201,146,42,0.03) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 80% 100% at 50% 50%,black 30%,transparent 80%);}
+.hero-inner{position:relative;max-width:900px;margin:0 auto;text-align:center;}
+.hero-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(201,146,42,0.08);border:1px solid var(--bd);border-radius:100px;padding:6px 18px;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;animation:chipIn 0.8s ease 0.2s both;}
+@keyframes chipIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.hero-chip::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold);animation:blink 2s infinite;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.5rem,8vw,7rem);letter-spacing:4px;line-height:0.95;margin-bottom:1.5rem;animation:titleIn 1s cubic-bezier(0.16,1,0.3,1) 0.4s both;}
+@keyframes titleIn{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.hero-title .t-red{color:var(--red-b);}.hero-title .t-gold{color:var(--gold);}.hero-title .t-w{color:var(--t1);}
+.hero-desc{font-size:1rem;color:var(--t2);max-width:500px;margin:0 auto 2.5rem;animation:fadeUpAnim 1s ease 0.6s both;}
+@keyframes fadeUpAnim{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;animation:fadeUpAnim 1s ease 0.8s both;}
+.btn-gold{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:#000;padding:13px 30px;border-radius:10px;font-size:14px;font-weight:700;letter-spacing:0.5px;text-decoration:none;border:2px solid var(--gold);transition:all 0.2s;position:relative;overflow:hidden;}
+.btn-gold::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:0.4s;}
+.btn-gold:hover::before{transform:translateX(100%);}
+.btn-gold:hover{background:var(--gold-l);border-color:var(--gold-l);transform:translateY(-2px);box-shadow:0 8px 25px rgba(201,146,42,0.35);}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--t1);padding:13px 30px;border-radius:10px;font-size:14px;font-weight:600;text-decoration:none;border:1.5px solid rgba(255,255,255,0.12);transition:all 0.2s;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px);}
+
+/* STATS */
+.stats-band{background:var(--bg2);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:1.5rem 2rem;}
+.stats-band-inner{max-width:1100px;margin:0 auto;display:flex;justify-content:center;gap:4rem;flex-wrap:wrap;}
+.stat-item{text-align:center;}
+.stat-val{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--gold-l);letter-spacing:2px;line-height:1;}
+.stat-lbl{font-size:10px;color:var(--t3);letter-spacing:2px;text-transform:uppercase;margin-top:4px;}
+
+/* SECTION */
+.section{padding:5rem 2rem;}
+.container{max-width:1200px;margin:0 auto;}
+.sec-head{text-align:center;margin-bottom:3rem;}
+.sec-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:10px;display:block;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,4vw,3.5rem);letter-spacing:2px;margin-bottom:10px;}
+.sec-desc{font-size:0.9rem;color:var(--t2);max-width:480px;margin:0 auto;}
+
+/* ===== VEXOR-STYLE STORE SECTION ===== */
+.store-section{background:var(--bg0);}
+
+/* Store tabs */
+.store-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:2.5rem;}
+.store-tab{
+  display:flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:12px;
+  font-size:13px;font-weight:600;
+  background:var(--bg2);border:1px solid var(--bd);
+  color:var(--t2);cursor:pointer;
+  transition:all 0.2s;
+}
+.store-tab:hover{border-color:var(--bdh);color:var(--t1);}
+.store-tab.active{background:rgba(201,146,42,0.1);border-color:var(--gold);color:var(--gold);}
+.store-tab .tab-count{font-size:10px;background:rgba(201,146,42,0.15);color:var(--gold);padding:2px 7px;border-radius:20px;font-weight:700;}
+
+/* Filter & Sort bar */
+.filter-bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin-bottom:2rem;
+  background:var(--bg2);border:1px solid var(--bd);
+  border-radius:14px;padding:12px 16px;
+}
+.search-box{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg3);border:1px solid var(--bd);
+  border-radius:9px;padding:7px 12px;flex:1;min-width:180px;
+}
+.search-box input{background:none;border:none;outline:none;color:var(--t1);font-family:'Outfit',sans-serif;font-size:13px;width:100%;}
+.search-box input::placeholder{color:var(--t3);}
+.search-box svg{flex-shrink:0;opacity:0.4;}
+
+.filter-chips{display:flex;gap:6px;flex-wrap:wrap;flex:2;}
+.chip{padding:5px 14px;border-radius:20px;font-size:12px;font-weight:600;background:var(--bg3);border:1px solid var(--bd);color:var(--t2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.chip:hover{border-color:var(--bdh);color:var(--t1);}
+.chip.active{background:rgba(201,146,42,0.12);border-color:var(--gold);color:var(--gold);}
+
+.sort-select{background:var(--bg3);border:1px solid var(--bd);border-radius:9px;padding:7px 12px;color:var(--t2);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;outline:none;}
+.sort-select:focus{border-color:var(--bdh);}
+
+/* Products grid */
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(270px,1fr));
+  gap:1.2rem;
+}
+
+/* Product card — VEXOR style */
+.prod-card{
+  background:var(--bg2);border:1px solid var(--bd);
+  border-radius:16px;overflow:hidden;
+  transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;
+  cursor:pointer;position:relative;
+  display:flex;flex-direction:column;
+}
+.prod-card:hover{transform:translateY(-5px);border-color:var(--bdh);box-shadow:0 16px 50px rgba(0,0,0,0.5);}
+
+/* Card header / icon area */
+.prod-thumb{
+  height:120px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:3.5rem;
+  position:relative;
+  overflow:hidden;
+}
+.prod-thumb::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(19,19,24,0.9) 100%);}
+
+/* badges */
+.prod-badges{position:absolute;top:10px;left:10px;display:flex;gap:5px;z-index:2;}
+.badge{font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:4px;}
+.badge-hot{background:var(--red);color:#fff;}
+.badge-new{background:#1a6b3a;color:#4ade80;}
+.badge-popular{background:rgba(201,146,42,0.15);border:1px solid var(--gold);color:var(--gold);}
+.badge-free{background:rgba(46,204,113,0.15);border:1px solid rgba(46,204,113,0.4);color:#2ECC71;}
+.badge-premium{background:rgba(157,203,239,0.12);border:1px solid rgba(157,203,239,0.3);color:#9DCBEF;}
+
+.wish-btn{position:absolute;top:10px;right:10px;z-index:2;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;transition:all 0.2s;}
+.wish-btn:hover{background:rgba(201,146,42,0.15);border-color:var(--gold);}
+
+/* Card body */
+.prod-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.prod-cat{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:0.8;}
+.prod-name{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:1px;line-height:1.1;color:var(--t1);}
+.prod-desc{font-size:12px;color:var(--t2);line-height:1.5;flex:1;}
+
+/* Stars */
+.prod-stars{display:flex;align-items:center;gap:5px;}
+.stars{color:var(--gold);font-size:11px;letter-spacing:1px;}
+.star-count{font-size:11px;color:var(--t3);}
+
+/* Footer row */
+.prod-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+.prod-price{font-size:1.15rem;font-weight:800;color:var(--t1);}
+.prod-price.free{color:#2ECC71;}
+.prod-price em{font-size:11px;font-weight:400;color:var(--t2);font-style:normal;}
+.buy-now{
+  display:flex;align-items:center;gap:6px;
+  background:var(--gold);color:#000;
+  padding:8px 16px;border-radius:8px;
+  font-size:12px;font-weight:700;letter-spacing:0.5px;
+  border:none;cursor:pointer;
+  transition:all 0.2s;position:relative;overflow:hidden;
+}
+.buy-now::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:0.4s;}
+.buy-now:hover::before{transform:translateX(100%);}
+.buy-now:hover{background:var(--gold-l);transform:scale(1.04);}
+.buy-now.free-btn{background:rgba(46,204,113,0.15);color:#2ECC71;border:1px solid rgba(46,204,113,0.3);}
+.buy-now.free-btn:hover{background:rgba(46,204,113,0.25);}
+
+/* Empty state */
+.no-results{grid-column:1/-1;text-align:center;padding:4rem 2rem;color:var(--t3);font-size:14px;}
+
+/* ===== VIP CARDS ===== */
+.shop-section{background:var(--bg0);}
+.vip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1.5rem;}
+.vip-card{background:var(--bg2);border:1px solid var(--bd);border-radius:20px;padding:2.5rem 2rem;position:relative;overflow:hidden;transition:border-color 0.3s,transform 0.3s,box-shadow 0.3s;cursor:pointer;animation:cardIn 0.6s cubic-bezier(0.16,1,0.3,1) both;}
+.vip-card:nth-child(1){animation-delay:0.1s;}.vip-card:nth-child(2){animation-delay:0.2s;}.vip-card:nth-child(3){animation-delay:0.3s;}
+@keyframes cardIn{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+.vip-card:hover{transform:translateY(-6px);}
+.vip-card.tier-gold{border-color:rgba(201,146,42,0.35);background:linear-gradient(160deg,var(--bg2) 0%,rgba(201,146,42,0.06) 100%);}
+.vip-card.tier-gold:hover{box-shadow:0 20px 60px rgba(201,146,42,0.15);}
+.vip-card.tier-silver:hover{box-shadow:0 20px 60px rgba(168,169,173,0.08);}
+.vip-card.tier-diamond:hover{box-shadow:0 20px 60px rgba(157,203,239,0.1);}
+.popular-badge{position:absolute;top:18px;right:18px;background:var(--gold);color:#000;font-size:9px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:4px;}
+.vip-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.02) 0%,transparent 60%);pointer-events:none;}
+.vip-accent{position:absolute;bottom:-20px;right:-20px;width:100px;height:100px;border-radius:50%;opacity:0.06;pointer-events:none;}
+.tier-silver .vip-accent{background:#A8A9AD;}.tier-gold .vip-accent{background:var(--gold);}.tier-diamond .vip-accent{background:#9DCBEF;}
+.vip-top{margin-bottom:1.5rem;}
+.vip-icon{font-size:2rem;margin-bottom:0.8rem;display:block;}
+.vip-tier-label{font-size:10px;font-weight:700;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;}
+.tier-silver .vip-tier-label{color:#A8A9AD;}.tier-gold .vip-tier-label{color:var(--gold);}.tier-diamond .vip-tier-label{color:#9DCBEF;}
+.vip-name{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;margin-bottom:1rem;}
+.vip-price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:4px;}
+.vip-price{font-size:2.8rem;font-weight:800;line-height:1;}
+.vip-curr{font-size:1.1rem;font-weight:400;color:var(--t2);}
+.vip-period{font-size:11px;color:var(--t3);margin-bottom:1.5rem;}
+.vip-line{border:none;border-top:1px solid var(--bd);margin-bottom:1.5rem;}
+.vip-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:2rem;}
+.vip-feats li{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--t2);}
+.vf-check{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.tier-silver .vf-check{background:rgba(168,169,173,0.12);color:#A8A9AD;}.tier-gold .vf-check{background:rgba(201,146,42,0.12);color:var(--gold);}.tier-diamond .vf-check{background:rgba(157,203,239,0.12);color:#9DCBEF;}
+.btn-vip{width:100%;padding:13px;border-radius:10px;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;cursor:pointer;border:1.5px solid;transition:all 0.2s;position:relative;overflow:hidden;}
+.btn-vip::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent);transform:translateX(-100%);transition:0.4s;}
+.btn-vip:hover::before{transform:translateX(100%);}
+.tier-silver .btn-vip{background:transparent;color:#A8A9AD;border-color:rgba(168,169,173,0.25);}
+.tier-silver .btn-vip:hover{background:rgba(168,169,173,0.08);border-color:#A8A9AD;transform:translateY(-1px);}
+.tier-gold .btn-vip{background:var(--gold);color:#000;border-color:var(--gold);}
+.tier-gold .btn-vip:hover{background:var(--gold-l);border-color:var(--gold-l);transform:translateY(-1px);box-shadow:0 8px 25px rgba(201,146,42,0.3);}
+.tier-diamond .btn-vip{background:transparent;color:#9DCBEF;border-color:rgba(157,203,239,0.25);}
+.tier-diamond .btn-vip:hover{background:rgba(157,203,239,0.08);border-color:#9DCBEF;transform:translateY(-1px);}
+
+/* HOW IT WORKS */
+.how-section{background:var(--bg1);}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;}
+.step-card{background:var(--bg2);border:1px solid var(--bd);border-radius:16px;padding:2rem 1.5rem;text-align:center;transition:border-color 0.3s,transform 0.3s;}
+.step-card:hover{border-color:var(--bdh);transform:translateY(-4px);}
+.step-num{font-family:'Bebas Neue',sans-serif;font-size:4rem;color:rgba(201,146,42,0.1);line-height:1;margin-bottom:0.5rem;}
+.step-icon{width:52px;height:52px;border-radius:14px;background:rgba(201,146,42,0.08);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:22px;margin:0 auto 1rem;}
+.step-title{font-weight:700;font-size:1rem;margin-bottom:6px;}
+.step-desc{font-size:13px;color:var(--t2);line-height:1.6;}
+
+/* PROFILE */
+.profile-section{background:var(--bg0);}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+.profile-card{background:var(--bg2);border:1px solid var(--bd);border-radius:20px;overflow:hidden;}
+.pc-header{background:var(--bg3);border-bottom:1px solid var(--bd);padding:1.2rem 1.5rem;display:flex;align-items:center;gap:12px;}
+.pc-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gold));display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;flex-shrink:0;}
+.pc-name{font-weight:600;font-size:14px;}.pc-id{font-size:11px;color:var(--t3);}
+.pc-vip{margin-left:auto;background:rgba(201,146,42,0.1);border:1px solid rgba(201,146,42,0.25);color:var(--gold);font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:5px;text-transform:uppercase;}
+.pc-body{padding:1.5rem;display:flex;flex-direction:column;gap:10px;}
+.pc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pc-stat{background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:12px;}
+.pc-stat-lbl{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.pc-stat-val{font-size:17px;font-weight:700;}
+.c-green{color:#2ECC71;}.c-gold{color:var(--gold);}.c-blue{color:#5DADE2;}.c-red{color:var(--red-b);}
+.pc-row{background:var(--bg3);border:1px solid var(--bd);border-radius:10px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;}
+.pc-row-lbl{font-size:10px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+.pc-row-val{font-size:14px;font-weight:600;}
+.pc-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:1px;}
+.badge-green{background:rgba(46,204,113,0.1);border:1px solid rgba(46,204,113,0.2);color:#2ECC71;}
+.badge-gold{background:rgba(201,146,42,0.1);border:1px solid rgba(201,146,42,0.2);color:var(--gold);}
+.profile-text .sec-head{text-align:left;}
+.feats-list{list-style:none;display:flex;flex-direction:column;gap:12px;margin-top:1.5rem;}
+.feats-list li{display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--t2);}
+.feat-ico{width:34px;height:34px;border-radius:9px;background:rgba(201,146,42,0.07);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;margin-top:1px;}
+.feat-title{font-weight:600;font-size:14px;color:var(--t1);display:block;margin-bottom:2px;}
+
+/* FOOTER */
+footer{background:var(--bg1);border-top:1px solid var(--bd);padding:3rem 2rem;text-align:center;}
+.ft-logo{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:4px;margin-bottom:8px;}
+.ft-logo em{color:var(--gold);font-style:normal;}
+.ft-desc{font-size:12px;color:var(--t3);margin-bottom:1.5rem;}
+.ft-links{display:flex;gap:2rem;justify-content:center;margin-bottom:2rem;}
+.ft-links a{color:var(--t3);text-decoration:none;font-size:12px;transition:color 0.2s;}
+.ft-links a:hover{color:var(--gold);}
+.ft-copy{font-size:11px;color:var(--t3);}
+
+/* STORY VIEWER */
+.sv-overlay{display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,0.95);align-items:center;justify-content:center;padding:2rem;}
+.sv-overlay.open{display:flex;}
+.sv-wrap{width:100%;max-width:420px;position:relative;animation:svIn 0.3s cubic-bezier(0.16,1,0.3,1);}
+@keyframes svIn{from{opacity:0;transform:scale(0.92);}to{opacity:1;transform:scale(1);}}
+.sv-progress{display:flex;gap:4px;margin-bottom:12px;}
+.sv-bar{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.2);overflow:hidden;}
+.sv-bar-fill{height:100%;background:var(--gold);width:0%;transition:width linear;}
+.sv-bar-fill.done{width:100%;}
+.sv-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.sv-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.sv-name{font-weight:600;font-size:14px;}.sv-time{font-size:11px;color:rgba(255,255,255,0.4);}
+.sv-close{margin-left:auto;background:rgba(255,255,255,0.1);border:none;border-radius:50%;width:32px;height:32px;color:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background 0.2s;}
+.sv-close:hover{background:rgba(255,255,255,0.2);}
+.sv-card{border-radius:20px;overflow:hidden;aspect-ratio:9/16;max-height:70vh;position:relative;display:flex;align-items:flex-end;}
+.sv-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8rem;}
+.sv-gradient{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.1) 60%,transparent 100%);}
+.sv-content{position:relative;padding:2rem 1.5rem;}
+.sv-tag{display:inline-block;background:rgba(201,146,42,0.2);border:1px solid var(--gold);color:var(--gold-l);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:4px;margin-bottom:10px;}
+.sv-story-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:2px;margin-bottom:6px;}
+.sv-story-desc{font-size:13px;color:rgba(255,255,255,0.7);line-height:1.5;}
+.sv-price{margin-top:12px;font-size:1.1rem;font-weight:700;color:var(--gold-l);}
+.sv-nav{position:absolute;top:50%;transform:translateY(-50%);display:flex;width:100%;justify-content:space-between;pointer-events:none;}
+.sv-prev,.sv-next{pointer-events:all;cursor:pointer;background:rgba(0,0,0,0.4);border:none;color:#fff;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;transition:background 0.2s;margin:0 -20px;}
+.sv-prev:hover,.sv-next:hover{background:rgba(0,0,0,0.7);}
+
+/* BUY MODAL */
+.buy-overlay{display:none;position:fixed;inset:0;z-index:9500;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:2rem;}
+.buy-overlay.open{display:flex;}
+.buy-modal{background:var(--bg2);border:1px solid var(--bdh);border-radius:24px;padding:3rem 2.5rem;max-width:400px;width:100%;text-align:center;position:relative;animation:svIn 0.3s cubic-bezier(0.16,1,0.3,1);box-shadow:0 40px 80px rgba(0,0,0,0.6);}
+.buy-modal::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:60%;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.buy-close{position:absolute;top:16px;right:16px;background:var(--bg3);border:1px solid var(--bd);color:var(--t2);width:32px;height:32px;border-radius:8px;cursor:pointer;font-size:14px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;}
+.buy-close:hover{color:var(--t1);border-color:var(--bdh);}
+.buy-icon{font-size:3.5rem;margin-bottom:0.8rem;}
+.buy-title{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:2px;margin-bottom:0.5rem;}
+.buy-price{font-size:1.8rem;font-weight:800;color:var(--gold);margin-bottom:0.5rem;}
+.buy-desc{font-size:13px;color:var(--t2);margin-bottom:2rem;line-height:1.6;}
+.buy-btn{width:100%;padding:14px;border-radius:12px;background:var(--gold);color:#000;border:none;font-size:14px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;margin-bottom:10px;position:relative;overflow:hidden;}
+.buy-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:0.4s;}
+.buy-btn:hover::before{transform:translateX(100%);}
+.buy-btn:hover{background:var(--gold-l);transform:translateY(-1px);box-shadow:0 8px 25px rgba(201,146,42,0.35);}
+.buy-cancel{width:100%;padding:12px;border-radius:12px;background:transparent;color:var(--t2);border:1px solid var(--bd);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.buy-cancel:hover{border-color:var(--bdh);color:var(--t1);}
+.buy-note{font-size:11px;color:var(--t3);margin-top:1.2rem;line-height:1.6;}
+
+/* LOADING */
+.loading-overlay{position:fixed;inset:0;z-index:99999;background:var(--bg);display:flex;align-items:center;justify-content:center;animation:loadOut 0.6s ease 1.5s both;}
+@keyframes loadOut{to{opacity:0;pointer-events:none;}}
+.load-logo{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:8px;background:linear-gradient(90deg,var(--red),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:loadPulse 0.8s ease infinite alternate;}
+@keyframes loadPulse{from{opacity:0.5;}to{opacity:1;}}
+
+@media(max-width:768px){
+  .profile-grid{grid-template-columns:1fr;}
+  .nav-links{display:none;}
+  .srv-pill{display:none;}
+  .products-grid{grid-template-columns:repeat(auto-fill,minmax(220px,1fr));}
+  .filter-chips{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay"><div class="load-logo">RL</div></div>
+
+<!-- ========== LOGIN PAGE ========== -->
+<div id="login-page">
+  <canvas id="canvas"></canvas>
+  <div class="cin-overlay"></div>
+  <div class="scanlines-login"></div>
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+  <div class="float-tags" id="float-tags"></div>
+
+  <div class="login-wrap">
+    <div class="srv-status">
+      <div class="srv-dot"></div>
+      <span id="srv-count">47</span>/128 Jucători Online
+    </div>
+
+    <div class="logo-area">
+      <div class="logo-emblem">
+        <div class="logo-ring"></div>
+        <div class="logo-ring-2"></div>
+        <div class="logo-core">RL</div>
+      </div>
+      <div class="logo-text">REDLIFE</div>
+      <div class="logo-sub">ROMANIA · ROLEPLAY</div>
+    </div>
+
+    <div class="login-card">
+      <div class="card-glow"></div>
+      <div class="card-line"></div>
+      <div class="card-title">Bun venit înapoi</div>
+      <div class="card-desc">Autentifică-te pentru a accesa magazinul VIP</div>
+      <div class="login-btns">
+
+        <a href="#" class="lbtn lbtn-discord" onclick="doLogin(event)">
+          <svg class="lbtn-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+          </svg>
+          Continuă cu Discord
+          <span class="lbtn-arrow">→</span>
+        </a>
+
+        <div class="divider">sau</div>
+
+        <a href="#" class="lbtn lbtn-steam" onclick="doLogin(event)">
+          <svg class="lbtn-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.979 0C5.678 0 .511 4.86.022 11.037l6.432 2.658c.545-.371 1.203-.59 1.912-.59.063 0 .125.004.188.006l2.861-4.142V8.91c0-2.495 2.028-4.524 4.524-4.524 2.494 0 4.524 2.031 4.524 4.527s-2.03 4.525-4.524 4.525h-.105l-4.076 2.911c0 .052.004.105.004.159 0 1.875-1.515 3.396-3.39 3.396-1.635 0-3.016-1.173-3.331-2.727L.436 15.27C1.862 20.307 6.486 24 11.979 24c6.627 0 11.999-5.373 11.999-12S18.606 0 11.979 0z"/>
+          </svg>
+          Continuă cu Steam
+          <span class="lbtn-arrow">→</span>
+        </a>
+
+        <a href="#" class="lbtn lbtn-cfx" onclick="doLogin(event)">
+          <svg class="lbtn-icon" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M8 12h8M12 8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Continuă cu CFX.re
+          <span class="lbtn-arrow">→</span>
+        </a>
+      </div>
+      <p class="login-note">
+        Prin conectare ești de acord cu <a href="#">Termenii</a> și <a href="#">Politica de confidențialitate</a> RedLife Romania.
+        <br>Beneficiile VIP se activează automat în joc.
+      </p>
+    </div>
+
+    <div class="bottom-feats">
+      <div class="bfeat"><div class="bfeat-val">1.2K+</div><div class="bfeat-label">Utilizatori</div></div>
+      <div class="bfeat"><div class="bfeat-val">3 ANI</div><div class="bfeat-label">Activitate</div></div>
+      <div class="bfeat"><div class="bfeat-val">24/7</div><div class="bfeat-label">Uptime</div></div>
+      <div class="bfeat"><div class="bfeat-val">AUTO</div><div class="bfeat-label">Livrare VIP</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== STORE PAGE ========== -->
+<div id="store-page">
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-badge">RL</div>
+    <div class="nav-logo-text">Red<em>Life</em></div>
+  </a>
+  <div class="nav-links">
+    <a href="#magazin" class="nav-link active">Magazin</a>
+    <a href="#produse" class="nav-link">Produse</a>
+    <a href="#cum-functioneaza" class="nav-link">Cum funcționează</a>
+    <a href="#profil" class="nav-link">Profilul meu</a>
+  </div>
+  <div class="nav-right">
+    <div class="srv-pill">
+      <div class="srv-dot-sm"></div>
+      <span id="pc">47</span>/128 Online
+    </div>
+    <div class="user-pill" onclick="window.location='#profil'">
+      <div class="user-av">IP</div>
+      <span>Ion Popescu</span>
+      <span class="user-vip">💎 VIP</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ANNOUNCE -->
+<div class="announce">
+  🔥 Weekend deal: <em>20% reducere la VIP Gold</em> &nbsp;·&nbsp; Cod: <em>REDLIFE20</em> &nbsp;·&nbsp; Ofertă expiră în: <em id="timer">23:47:12</em>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-chip">Serverul #1 Roleplay din România</div>
+    <h1 class="hero-title">
+      <span class="t-red">Red</span><span class="t-gold">Life</span><br>
+      <span class="t-w">Romania</span>
+    </h1>
+    <p class="hero-desc">Cumpără VIP, beneficiile apar instant în joc. Complet automat — fără DM, fără așteptare.</p>
+    <div class="hero-btns">
+      <a href="#produse" class="btn-gold">🛒 Magazin Complet</a>
+      <a href="#magazin" class="btn-gold" style="background:transparent;color:var(--gold);border-color:var(--gold);">⭐ Pachete VIP</a>
+      <a href="#profil" class="btn-ghost">👤 Profilul meu</a>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stats-band-inner">
+    <div class="stat-item"><div class="stat-val" id="stat-pc">47</div><div class="stat-lbl">Jucători Online</div></div>
+    <div class="stat-item"><div class="stat-val">128</div><div class="stat-lbl">Sloturi Max</div></div>
+    <div class="stat-item"><div class="stat-val">1.2K+</div><div class="stat-lbl">Utilizatori</div></div>
+    <div class="stat-item"><div class="stat-val">3 ANI</div><div class="stat-lbl">Activitate</div></div>
+    <div class="stat-item"><div class="stat-val">24/7</div><div class="stat-lbl">Uptime</div></div>
+  </div>
+</div>
+
+<!-- ===== STORE: PRODUCTS (VEXOR STYLE) ===== -->
+<section class="section store-section" id="produse">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-label">Magazin RedLife</span>
+      <h2 class="sec-title">Toate Produsele</h2>
+      <p class="sec-desc">Mașini, arme, iteme, skin-uri și multe altele — disponibile instant după cumpărare.</p>
+    </div>
+
+    <!-- Store tabs -->
+    <div class="store-tabs">
+      <div class="store-tab active" data-tab="all" onclick="filterTab('all',this)">🏪 Toate <span class="tab-count" id="cnt-all">0</span></div>
+      <div class="store-tab" data-tab="masini" onclick="filterTab('masini',this)">🚗 Mașini <span class="tab-count" id="cnt-masini">0</span></div>
+      <div class="store-tab" data-tab="arme" onclick="filterTab('arme',this)">🔫 Arme <span class="tab-count" id="cnt-arme">0</span></div>
+      <div class="store-tab" data-tab="iteme" onclick="filterTab('iteme',this)">📦 Iteme <span class="tab-count" id="cnt-iteme">0</span></div>
+      <div class="store-tab" data-tab="skinuri" onclick="filterTab('skinuri',this)">👔 Skin-uri <span class="tab-count" id="cnt-skinuri">0</span></div>
+      <div class="store-tab" data-tab="joburi" onclick="filterTab('joburi',this)">💼 Joburi <span class="tab-count" id="cnt-joburi">0</span></div>
+      <div class="store-tab" data-tab="imobiliare" onclick="filterTab('imobiliare',this)">🏠 Imobiliare <span class="tab-count" id="cnt-imobiliare">0</span></div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="search-input" placeholder="Caută produse..." oninput="renderProducts()">
+      </div>
+      <div class="filter-chips">
+        <div class="chip active" data-filter="all" onclick="filterChip('all',this)">Toate</div>
+        <div class="chip" data-filter="free" onclick="filterChip('free',this)">🎁 Gratuit</div>
+        <div class="chip" data-filter="hot" onclick="filterChip('hot',this)">🔥 HOT</div>
+        <div class="chip" data-filter="new" onclick="filterChip('new',this)">✨ Nou</div>
+        <div class="chip" data-filter="popular" onclick="filterChip('popular',this)">⭐ Popular</div>
+      </div>
+      <select class="sort-select" id="sort-select" onchange="renderProducts()">
+        <option value="default">↺ Default</option>
+        <option value="cheap">🤑 Cel mai ieftin</option>
+        <option value="expensive">💰 Cel mai scump</option>
+        <option value="popular">🔥 Cel mai popular</option>
+      </select>
+    </div>
+
+    <!-- Products grid -->
+    <div class="products-grid" id="products-grid"></div>
+  </div>
+</section>
+
+<!-- VIP PACKAGES -->
+<section class="section shop-section" id="magazin">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-label">Magazin VIP</span>
+      <h2 class="sec-title">Alege Pachetul Tău</h2>
+      <p class="sec-desc">Beneficiile se activează automat în câteva secunde după cumpărare.</p>
+    </div>
+    <div class="vip-grid">
+      <div class="vip-card tier-silver">
+        <div class="vip-accent"></div>
+        <span class="vip-icon">🥈</span>
+        <div class="vip-tier-label">Silver</div>
+        <div class="vip-name">VIP Silver</div>
+        <div class="vip-price-row"><span class="vip-price">15</span><span class="vip-curr">RON</span></div>
+        <div class="vip-period">pe lună · 30 zile acces</div>
+        <hr class="vip-line">
+        <ul class="vip-feats">
+          <li><div class="vf-check">✓</div>Tag [VIP] colorat în chat</li>
+          <li><div class="vf-check">✓</div>+500 lei bonus la spawn</li>
+          <li><div class="vf-check">✓</div>Joburi exclusive VIP</li>
+          <li><div class="vf-check">✓</div>Skin personalizat Silver</li>
+          <li><div class="vf-check">✓</div>Priority queue (5 sloturi)</li>
+        </ul>
+        <button class="btn-vip" onclick="openBuy('VIP Silver','🥈','15 RON','Tag colorat, +500 lei la spawn, joburi exclusive și priority queue.')">Cumpără Acum</button>
+      </div>
+      <div class="vip-card tier-gold">
+        <div class="vip-accent"></div>
+        <div class="popular-badge">Popular</div>
+        <span class="vip-icon">🥇</span>
+        <div class="vip-tier-label">Gold</div>
+        <div class="vip-name">VIP Gold</div>
+        <div class="vip-price-row"><span class="vip-price">30</span><span class="vip-curr">RON</span></div>
+        <div class="vip-period">pe lună · 30 zile acces</div>
+        <hr class="vip-line">
+        <ul class="vip-feats">
+          <li><div class="vf-check">✓</div>Tot ce include Silver</li>
+          <li><div class="vf-check">✓</div>Tag [GOLD] + culoare specială</li>
+          <li><div class="vf-check">✓</div>+2.500 lei bonus la spawn</li>
+          <li><div class="vf-check">✓</div>Vehicul exclusiv VIP Gold</li>
+          <li><div class="vf-check">✓</div>Garaj privat (5 mașini extra)</li>
+          <li><div class="vf-check">✓</div>Priority queue (15 sloturi)</li>
+          <li><div class="vf-check">✓</div>Acces zona VIP Lounge</li>
+        </ul>
+        <button class="btn-vip" onclick="openBuy('VIP Gold','🥇','30 RON','Vehicul exclusiv, +2500 lei, garaj privat și zona VIP Lounge.')">Cumpără Acum</button>
+      </div>
+      <div class="vip-card tier-diamond">
+        <div class="vip-accent"></div>
+        <span class="vip-icon">💎</span>
+        <div class="vip-tier-label">Diamond</div>
+        <div class="vip-name">VIP Diamond</div>
+        <div class="vip-price-row"><span class="vip-price">55</span><span class="vip-curr">RON</span></div>
+        <div class="vip-period">pe lună · 30 zile acces</div>
+        <hr class="vip-line">
+        <ul class="vip-feats">
+          <li><div class="vf-check">✓</div>Tot ce include Gold</li>
+          <li><div class="vf-check">✓</div>Tag [💎 DIAMOND] animat</li>
+          <li><div class="vf-check">✓</div>+10.000 lei bonus la spawn</li>
+          <li><div class="vf-check">✓</div>Casă exclusivă furnizată</li>
+          <li><div class="vf-check">✓</div>Garaj privat (10 mașini extra)</li>
+          <li><div class="vf-check">✓</div>Max priority queue</li>
+          <li><div class="vf-check">✓</div>Custom plate personalizată</li>
+          <li><div class="vf-check">✓</div>Acces /goto + comenzi VIP</li>
+        </ul>
+        <button class="btn-vip" onclick="openBuy('VIP Diamond','💎','55 RON','Casă furnizată, +10.000 lei, garaj 10 mașini și toate comenzile VIP.')">Cumpără Acum</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section" id="cum-functioneaza">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-label">Cum funcționează</span>
+      <h2 class="sec-title">100% Automat</h2>
+      <p class="sec-desc">De la plată la activare în joc — fără intervenție umană.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">🔐</div>
+        <h3 class="step-title">Te autentifici</h3>
+        <p class="step-desc">Login cu Discord, Steam sau CFX. Contul tău din joc este identificat automat via MariaDB.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">⭐</div>
+        <h3 class="step-title">Alegi pachetul</h3>
+        <p class="step-desc">Selectezi VIP Silver, Gold sau Diamond și confirmi în fereastra de cumpărare.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">💳</div>
+        <h3 class="step-title">Plătești securizat</h3>
+        <p class="step-desc">Plata se procesează instant. Confirmare automată prin Discord și email.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon">🎮</div>
+        <h3 class="step-title">Primești în joc</h3>
+        <p class="step-desc">Serverul FiveM detectează cumpărătura și aplică rangul automat. Sub 30 de secunde.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE -->
+<section class="section profile-section" id="profil">
+  <div class="container">
+    <div class="profile-grid">
+      <div class="profile-card">
+        <div class="pc-header">
+          <div class="pc-av">IP</div>
+          <div>
+            <div class="pc-name">Ion Popescu</div>
+            <div class="pc-id">discord:342156789012</div>
+          </div>
+          <div class="pc-vip">💎 Diamond</div>
+        </div>
+        <div class="pc-body">
+          <div class="pc-grid">
+            <div class="pc-stat"><div class="pc-stat-lbl">Portofel</div><div class="pc-stat-val c-green">$24,500</div></div>
+            <div class="pc-stat"><div class="pc-stat-lbl">Bancă</div><div class="pc-stat-val c-gold">$182,000</div></div>
+            <div class="pc-stat"><div class="pc-stat-lbl">Ore Jucate</div><div class="pc-stat-val c-blue">247h</div></div>
+            <div class="pc-stat"><div class="pc-stat-lbl">krCoins</div><div class="pc-stat-val c-gold">1,250</div></div>
+          </div>
+          <div class="pc-row">
+            <div><div class="pc-row-lbl">Job</div><div class="pc-row-val">Polițist Local</div></div>
+            <span class="pc-badge badge-green">Activ</span>
+          </div>
+          <div class="pc-row">
+            <div><div class="pc-row-lbl">Facțiune</div><div class="pc-row-val">LSPD — Sergent</div></div>
+            <span class="pc-badge badge-gold">Rang 3</span>
+          </div>
+          <div class="pc-row">
+            <div><div class="pc-row-lbl">VIP Activ</div><div class="pc-row-val">Diamond — expiră 18 Mai</div></div>
+            <span class="pc-badge badge-gold">💎</span>
+          </div>
+        </div>
+      </div>
+      <div class="profile-text">
+        <div class="sec-head">
+          <span class="sec-label">Profilul Meu</span>
+          <h2 class="sec-title">Datele tale live din joc</h2>
+        </div>
+        <p style="color:var(--t2);font-size:13px;line-height:1.7;">Odată autentificat, profilul tău este populat direct din baza de date vrp_users — live, în timp real.</p>
+        <ul class="feats-list">
+          <li><div class="feat-ico">💰</div><div><span class="feat-title">Economie completă</span>Portofel, bancă, krCoins — sincronizate live cu serverul.</div></li>
+          <li><div class="feat-ico">💼</div><div><span class="feat-title">Job & Facțiune</span>Job curent, rang în facțiune și statusul activității.</div></li>
+          <li><div class="feat-ico">⭐</div><div><span class="feat-title">Status VIP</span>Nivelul VIP activ și data de expirare, din vrp_users.vipLvl.</div></li>
+          <li><div class="feat-ico">🚗</div><div><span class="feat-title">Garajul tău</span>Lista completă a vehiculelor înregistrate.</div></li>
+          <li><div class="feat-ico">📦</div><div><span class="feat-title">Istoricul achizițiilor</span>Toate pachetele cumpărate și statusul activării lor.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-logo">Red<em>Life</em> Romania</div>
+  <p class="ft-desc">Serverul FiveM Roleplay #1 din România · Powered by vRP Framework</p>
+  <div class="ft-links">
+    <a href="#">Discord</a>
+    <a href="#">Regulament</a>
+    <a href="#">Termeni & Condiții</a>
+    <a href="#">Contact</a>
+    <a href="#">Admin Panel</a>
+  </div>
+  <p class="ft-copy">© 2025 RedLife Romania. Toate drepturile rezervate.</p>
+</footer>
+
+</div><!-- end store-page -->
+
+<!-- BUY MODAL -->
+<div class="buy-overlay" id="buy-overlay">
+  <div class="buy-modal">
+    <button class="buy-close" onclick="closeBuy()">✕</button>
+    <div class="buy-icon" id="buy-icon">⭐</div>
+    <div class="buy-title" id="buy-title">VIP Gold</div>
+    <div class="buy-price" id="buy-price">30 RON</div>
+    <p class="buy-desc" id="buy-desc">Beneficiile se activează automat în joc.</p>
+    <button class="buy-btn" onclick="confirmPurchase()">✓ Confirmă Cumpărătura</button>
+    <button class="buy-cancel" onclick="closeBuy()">Anulează</button>
+    <p class="buy-note">Trebuie să fii autentificat pentru a finaliza.<br>Activare automată în sub 30 de secunde după plată.</p>
+  </div>
+</div>
+
+<script>
+// ===== LOGIN CANVAS =====
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H, nodes = [];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+const buildings=[{x:0,w:80,h:120},{x:90,w:60,h:180},{x:160,w:100,h:140},{x:270,w:70,h:200},{x:350,w:120,h:160},{x:480,w:80,h:220},{x:570,w:60,h:170},{x:640,w:90,h:140},{x:740,w:110,h:190},{x:860,w:80,h:160},{x:950,w:70,h:210},{x:1030,w:100,h:150},{x:1140,w:80,h:180},{x:1230,w:60,h:130},{x:1300,w:100,h:170},{x:1410,w:70,h:200},{x:1490,w:90,h:150},{x:1590,w:120,h:190}];
+function drawCity(){ctx.fillStyle='rgba(192,39,31,0.04)';buildings.forEach(b=>{ctx.fillRect(b.x,H-b.h,b.w,b.h);ctx.fillStyle='rgba(201,146,42,0.06)';for(let wy=H-b.h+15;wy<H-10;wy+=20){for(let wx=b.x+8;wx<b.x+b.w-8;wx+=18){if(Math.random()>0.4)ctx.fillRect(wx,wy,8,10);}}ctx.fillStyle='rgba(192,39,31,0.04)';});}
+for(let i=0;i<60;i++)nodes.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,r:Math.random()*2+0.5,alpha:Math.random()*0.4+0.1});
+let mouseX=0,mouseY=0;
+document.addEventListener('mousemove',e=>{mouseX=e.clientX;mouseY=e.clientY;});
+let animating=true;
+function draw(){
+  if(!animating)return;
+  ctx.clearRect(0,0,W,H);
+  const grad=ctx.createRadialGradient(W/2,H*0.6,0,W/2,H/2,Math.max(W,H)*0.8);
+  grad.addColorStop(0,'rgba(50,5,5,0.8)');grad.addColorStop(0.5,'rgba(15,5,15,0.8)');grad.addColorStop(1,'rgba(6,6,8,0.9)');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+  drawCity();
+  nodes.forEach((n,i)=>{
+    n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0||n.x>W)n.vx*=-1;if(n.y<0||n.y>H)n.vy*=-1;
+    nodes.forEach((m,j)=>{if(j<=i)return;const dx=n.x-m.x,dy=n.y-m.y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<150){ctx.beginPath();ctx.strokeStyle=`rgba(201,146,42,${0.06*(1-dist/150)})`;ctx.lineWidth=0.5;ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.stroke();}});
+    ctx.beginPath();ctx.arc(n.x,n.y,n.r,0,Math.PI*2);ctx.fillStyle=`rgba(201,146,42,${n.alpha})`;ctx.fill();
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+// Floating tags
+const tags=['#VIPGold','#RolePlay','#FiveM','#Romania','#CarCustom','#PolicieLocala','#Mafia','#Gang','#Drift','#Lowrider','#EMS','#LSPD','#Bank','#Heist','#Business'];
+const container=document.getElementById('float-tags');
+tags.forEach(tag=>{const el=document.createElement('div');el.className='ftag';el.textContent=tag;el.style.left=(5+Math.random()*85)+'%';el.style.animationDuration=(15+Math.random()*20)+'s';el.style.animationDelay=(Math.random()*15)+'s';container.appendChild(el);});
+
+// Login transition
+function doLogin(e){
+  e.preventDefault();
+  const lp=document.getElementById('login-page');
+  const sp=document.getElementById('store-page');
+  lp.classList.add('hide');
+  setTimeout(()=>{
+    lp.style.display='none';
+    animating=false;
+    sp.classList.add('show');
+  },700);
+}
+
+// Live player count
+let pc=47;
+setInterval(()=>{pc=Math.max(30,Math.min(128,pc+Math.floor(Math.random()*5)-2));document.getElementById('srv-count').textContent=pc;document.querySelectorAll('#pc,#stat-pc').forEach(e=>e.textContent=pc);},7000);
+
+// Timer
+let secs=23*3600+47*60+12;
+setInterval(()=>{secs=Math.max(0,secs-1);const h=String(Math.floor(secs/3600)).padStart(2,'0');const m=String(Math.floor((secs%3600)/60)).padStart(2,'0');const s=String(secs%60).padStart(2,'0');const t=document.getElementById('timer');if(t)t.textContent=`${h}:${m}:${s}`;},1000);
+
+// ===== PRODUCTS DATA =====
+const products = [
+  // MASINI
+  {id:1,tab:'masini',icon:'🏎️',name:'Lambo Urus Custom',cat:'Vehicule',desc:'Mașina exclusivă VIP Diamond. Vopsea custom, jante 24", interior de lux. Disponibilă în garajul tău instant.',price:0,priceStr:'Inclus VIP Diamond',rating:4.9,ratingCount:61,badges:['popular'],bgColor:'#0d0d1a'},
+  {id:2,tab:'masini',icon:'🚘',name:'Nissan Silvia S15',cat:'Drift Build',desc:'Build de drift complet — motor upgrades, coilovers, aero kit personalizat. Disponibil la dealer VIP.',price:150,priceStr:'150 krCoins',rating:4.8,ratingCount:44,badges:['hot'],bgColor:'#1a0d0d'},
+  {id:3,tab:'masini',icon:'🚙',name:'Chevrolet Impala 64',cat:'Lowrider',desc:'Hydraulics complete, custom paint job, sistem audio premium. Iconicul Lowrider pe serverul nostru.',price:200,priceStr:'200 krCoins',rating:4.7,ratingCount:38,badges:[],bgColor:'#0d1a0d'},
+  {id:4,tab:'masini',icon:'🚗',name:'BMW M3 E46 Street',cat:'Vehicule',desc:'Mașina de stradă preferată a localilor — motor swap, jante forjate și body kit full.',price:120,priceStr:'120 krCoins',rating:4.6,ratingCount:52,badges:['new'],bgColor:'#1a1a0d'},
+  {id:5,tab:'masini',icon:'🚓',name:'Dodge Charger Police',cat:'Vehicule',desc:'Mașina de poliție custom cu sirene funcționale, lightbar și design exclusiv RedLife.',price:180,priceStr:'180 krCoins',rating:4.5,ratingCount:29,badges:[],bgColor:'#0a0a1a'},
+  {id:6,tab:'masini',icon:'🏎️',name:'Ferrari SF90 VIP Edition',cat:'Supercar',desc:'Supercar-ul suprem al serverului. Viteză maximă, animații speciale la ieșire din mașină.',price:400,priceStr:'400 krCoins',rating:5.0,ratingCount:18,badges:['hot','popular'],bgColor:'#1a0505'},
+  // ARME
+  {id:7,tab:'arme',icon:'🔫',name:'AK-47 Gold Edition',cat:'Armament',desc:'Varianta aurie a AK-47 — skin exclusiv VIP, stats îmbunătățite față de versiunea standard.',price:500,priceStr:'500 krCoins',rating:4.9,ratingCount:73,badges:['hot'],bgColor:'#1a0a0a'},
+  {id:8,tab:'arme',icon:'🔫',name:'Desert Eagle Diamond',cat:'Pistol',desc:'Pistolul de prestigiu al serverului. Skin Diamond, holster animat custom și efecte de foc.',price:350,priceStr:'350 krCoins',rating:4.8,ratingCount:55,badges:['popular'],bgColor:'#0a0a1a'},
+  {id:9,tab:'arme',icon:'🗡️',name:'Cuțit Gravat VIP',cat:'Melee',desc:'Cuțitul exclusiv VIP cu gravuri personalizate. Skin unic care arată că ești dintre cei mai vechi.',price:100,priceStr:'100 krCoins',rating:4.6,ratingCount:31,badges:[],bgColor:'#0a1a0a'},
+  {id:10,tab:'arme',icon:'🔫',name:'Sniper Custom RedLife',cat:'Armament',desc:'Sniper cu scope personalizat și sunet unic. Disponibil exclusiv pentru membrii VIP Gold+.',price:600,priceStr:'600 krCoins',rating:4.9,ratingCount:22,badges:['new'],bgColor:'#1a0d00'},
+  // ITEME
+  {id:11,tab:'iteme',icon:'🧰',name:'Trusa Medic Pro',cat:'Item Special',desc:'Trusa de prim ajutor avansată — vindecă 100HP și elimină efectele negative. Reutilizabilă 3 ori.',price:80,priceStr:'80 krCoins',rating:4.7,ratingCount:89,badges:[],bgColor:'#001a1a'},
+  {id:12,tab:'iteme',icon:'⚡',name:'Boost XP x2',cat:'Consumabil',desc:'Dublează experiența obținută timp de 24 ore. Perfect pentru a urca rapid în rang.',price:120,priceStr:'120 krCoins',rating:4.8,ratingCount:114,badges:['popular'],bgColor:'#1a1a00'},
+  {id:13,tab:'iteme',icon:'💃',name:'Animații Exclusive',cat:'Cosmetic',desc:'Pachet de 10 animații exclusive VIP — dansuri, gesturi și emote-uri unice pe server.',price:200,priceStr:'200 krCoins',rating:4.9,ratingCount:67,badges:['hot'],bgColor:'#1a001a'},
+  {id:14,tab:'iteme',icon:'🏠',name:'Cheie Safe House',cat:'Item Rar',desc:'Deblocează un safe house secret pe hartă. Loc perfect pentru stash și planificări clandestine.',price:300,priceStr:'300 krCoins',rating:4.7,ratingCount:41,badges:['new'],bgColor:'#1a0a00'},
+  // SKINURI
+  {id:15,tab:'skinuri',icon:'🤵',name:'Suit Mafiot Custom',cat:'Outfit',desc:'Costumul signature al mafiotului de rang înalt — haine de designer cu animații exclusive de mers.',price:150,priceStr:'150 krCoins',rating:4.8,ratingCount:88,badges:['popular'],bgColor:'#1a001a'},
+  {id:16,tab:'skinuri',icon:'👕',name:'Streetwear Diamond',cat:'Casual',desc:'Colecția de streetwear exclusivă Diamond — haine de brand cu tag-uri vizibile în joc.',price:0,priceStr:'Inclus VIP Diamond',rating:4.9,ratingCount:102,badges:[],bgColor:'#0a001a'},
+  {id:17,tab:'skinuri',icon:'👮',name:'Uniformă LSPD Elite',cat:'Uniformă',desc:'Uniforma specială a unității de elită a poliției. Custom patches, armament vizibil.',price:250,priceStr:'250 krCoins',rating:4.7,ratingCount:39,badges:['new'],bgColor:'#00081a'},
+  // JOBURI
+  {id:18,tab:'joburi',icon:'💼',name:'Traficant de Lux',cat:'Job Exclusiv',desc:'Jobul exclusiv VIP Gold+ — transport de mărfuri de lux cu earnings de 3x față de joburile standard.',price:0,priceStr:'Req: VIP Gold',rating:4.9,ratingCount:57,badges:['popular'],bgColor:'#001a0d'},
+  {id:19,tab:'joburi',icon:'⛽',name:'Owner Stație Peco',cat:'Business',desc:'Cumpără și administrează propria stație de benzină. Venituri pasive și angajați NPC.',price:0,priceStr:'Req: VIP Diamond',rating:5.0,ratingCount:24,badges:[],bgColor:'#1a1500'},
+  // IMOBILIARE
+  {id:20,tab:'imobiliare',icon:'🏙️',name:'Penthouse Vinewood',cat:'Imobiliare',desc:'Penthouse-ul de lux exclusiv Diamond — priveliște la oraș, garaj propriu, seif și protecție anti-jaf.',price:0,priceStr:'Inclus VIP Diamond',rating:5.0,ratingCount:31,badges:['popular'],bgColor:'#0a0a1a'},
+  {id:21,tab:'imobiliare',icon:'🏚️',name:'Casa de Siguranță',cat:'Safe House',desc:'Un safe house discret pentru activitățile tale clandestine. Loc sigur pentru stash și planificări.',price:300,priceStr:'300 krCoins',rating:4.6,ratingCount:19,badges:[],bgColor:'#1a0a0a'},
+];
+
+// ===== STORE STATE =====
+let activeTab = 'all';
+let activeFilter = 'all';
+
+function filterTab(tab, el){
+  activeTab = tab;
+  document.querySelectorAll('.store-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
+}
+function filterChip(filter, el){
+  activeFilter = filter;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  renderProducts();
+}
+
+function renderProducts(){
+  const grid = document.getElementById('products-grid');
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const sort = document.getElementById('sort-select').value;
+
+  let list = products.filter(p => {
+    if(activeTab !== 'all' && p.tab !== activeTab) return false;
+    if(activeFilter === 'free' && p.price !== 0) return false;
+    if(activeFilter === 'hot' && !p.badges.includes('hot')) return false;
+    if(activeFilter === 'new' && !p.badges.includes('new')) return false;
+    if(activeFilter === 'popular' && !p.badges.includes('popular')) return false;
+    if(search && !p.name.toLowerCase().includes(search) && !p.desc.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  if(sort==='cheap') list.sort((a,b)=>a.price-b.price);
+  else if(sort==='expensive') list.sort((a,b)=>b.price-a.price);
+  else if(sort==='popular') list.sort((a,b)=>b.ratingCount-a.ratingCount);
+
+  // Update tab counts
+  ['all','masini','arme','iteme','skinuri','joburi','imobiliare'].forEach(tab=>{
+    const cnt = tab==='all' ? products.length : products.filter(p=>p.tab===tab).length;
+    const el = document.getElementById('cnt-'+tab);
+    if(el) el.textContent = cnt;
+  });
+
+  if(list.length === 0){
+    grid.innerHTML = '<div class="no-results">🔍 Niciun produs găsit. Încearcă un alt filtru.</div>';
+    return;
+  }
+
+  grid.innerHTML = list.map(p=>{
+    const badgeHTML = p.badges.map(b=>`<div class="badge badge-${b}">${b==='hot'?'🔥 HOT':b==='new'?'✨ NOU':b==='popular'?'⭐ POPULAR':''}</div>`).join('');
+    const stars = '★'.repeat(Math.floor(p.rating)) + (p.rating%1>=0.5?'½':'');
+    const isFree = p.price === 0;
+    const priceHTML = isFree
+      ? `<span class="prod-price free">${p.priceStr}</span>`
+      : `<span class="prod-price">${p.priceStr}</span>`;
+    const btnHTML = isFree
+      ? `<button class="buy-now free-btn" onclick="openBuy('${p.name.replace(/'/g,"\\'")}','${p.icon}','Gratuit / Cerință','${p.desc.replace(/'/g,"\\'")}')">🎁 Obține</button>`
+      : `<button class="buy-now" onclick="openBuy('${p.name.replace(/'/g,"\\'")}','${p.icon}','${p.priceStr}','${p.desc.replace(/'/g,"\\'")}')">🛒 Cumpără</button>`;
+    return `
+    <div class="prod-card">
+      <div class="prod-thumb" style="background:${p.bgColor||'#131318'}">
+        ${p.icon}
+        <div class="prod-badges">${badgeHTML}</div>
+        <div class="wish-btn" title="Salvează">🤍</div>
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">${p.cat}</div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-desc">${p.desc}</div>
+        <div class="prod-stars">
+          <span class="stars">${'★'.repeat(Math.floor(p.rating))}${p.rating%1>=0.5?'☆':''}</span>
+          <span class="star-count">${p.rating.toFixed(1)} (${p.ratingCount})</span>
+        </div>
+        <div class="prod-footer">
+          ${priceHTML}
+          ${btnHTML}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+renderProducts();
+
+// BUY MODAL
+function openBuy(name,icon,price,desc){document.getElementById('buy-icon').textContent=icon;document.getElementById('buy-title').textContent=name;document.getElementById('buy-price').textContent=price;document.getElementById('buy-desc').textContent=desc;document.getElementById('buy-overlay').classList.add('open');}
+function closeBuy(){document.getElementById('buy-overlay').classList.remove('open');}
+function confirmPurchase(){alert('Redirectat la pagina de plată!');closeBuy();}
+document.getElementById('buy-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('buy-overlay'))closeBuy();});
+</script>
+</body>
+</html>
